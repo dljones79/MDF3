@@ -1,4 +1,4 @@
-package com.fullsail.djones.android.fundamentals;
+package com.fullsail.djones.android.fundamentalsapp;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

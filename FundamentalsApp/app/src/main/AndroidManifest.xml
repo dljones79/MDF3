@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.fullsail.djones.android.fundamentals" >
+    package="com.fullsail.djones.android.fundamentalsapp" >
 
     <application
         android:allowBackup="true"
@@ -16,12 +16,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <service
-            android:name=".PlayerService"
-            android:enabled="true"
-            android:exported="false" >
-        </service>
     </application>
 
 </manifest>
