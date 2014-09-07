@@ -33,6 +33,7 @@ public class PlayerService extends Service implements MediaPlayer.OnCompletionLi
     int mTrackPosition;                                         // Integer to check what track is playing
     String[] trackArray;                                        // Array to hold file names of audio from raw file
     String[] songTitles;                                        // Array to hold names of songs
+    String[] imageTitles;
     public static final int STANDARD_NOTIFICATION = 0x01001;
     public static final int EXPANDED_NOTIFICATION = 0x01002;
 
@@ -44,6 +45,7 @@ public class PlayerService extends Service implements MediaPlayer.OnCompletionLi
         // Assign data to string arrays
         trackArray = new String[]{"/raw/neo_western", "/raw/summon_the_rawk", "/raw/take_the_lead", "/raw/zap_beat"};
         songTitles = new String[]{"Neo Western", "Summon the Rawk", "Take the Lead", "Zap Beat"};
+        imageTitles = new String[]{"neo", "summon", "lead", "zap"};
 
         // Set prepared and resumed states to false and track position to zero
         mPlayerPrepared = mActivityResumed = false;

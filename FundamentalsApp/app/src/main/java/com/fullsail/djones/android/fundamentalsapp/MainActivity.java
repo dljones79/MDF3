@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 
@@ -28,6 +29,7 @@ public class MainActivity extends Activity implements View.OnClickListener, Serv
     Button forwardButton;
     Button backButton;
     TextView songTitle;                             // TextView variable
+    ImageView songImage;
 
     // Runs when activity is created
     @Override
@@ -56,6 +58,9 @@ public class MainActivity extends Activity implements View.OnClickListener, Serv
         songTitle = (TextView) findViewById(R.id.songText);
         songTitle.setText("");
 
+        // Set the image view
+        songImage = (ImageView) findViewById(R.id.imageView);
+
     }
 
     // Called when a button is clicked
@@ -76,6 +81,15 @@ public class MainActivity extends Activity implements View.OnClickListener, Serv
             forwardButton.setEnabled(true);
             backButton.setEnabled(true);
             songTitle.setText("Now Playing: " + playerService.songTitles[playerService.mTrackPosition]);
+            if (playerService.mTrackPosition == 0){
+                songImage.setImageResource(R.drawable.neo);
+            } else if (playerService.mTrackPosition == 1){
+                songImage.setImageResource(R.drawable.summon);
+            } else if (playerService.mTrackPosition == 2){
+                songImage.setImageResource(R.drawable.lead);
+            } else if (playerService.mTrackPosition == 3){
+                songImage.setImageResource(R.drawable.zap);
+            }
         } else if (v.getId() == R.id.stopButton) {
             playerService.onStop();
             playButton.setEnabled(true);
@@ -91,6 +105,15 @@ public class MainActivity extends Activity implements View.OnClickListener, Serv
             forwardButton.setEnabled(true);
             backButton.setEnabled(true);
             songTitle.setText("Now Playing: " + playerService.songTitles[playerService.mTrackPosition]);
+            if (playerService.mTrackPosition == 0){
+                songImage.setImageResource(R.drawable.neo);
+            } else if (playerService.mTrackPosition == 1){
+                songImage.setImageResource(R.drawable.summon);
+            } else if (playerService.mTrackPosition == 2){
+                songImage.setImageResource(R.drawable.lead);
+            } else if (playerService.mTrackPosition == 3){
+                songImage.setImageResource(R.drawable.zap);
+            }
         } else if (v.getId() == R.id.backButton) {
             playerService.onBack();
             playButton.setEnabled(false);
@@ -99,6 +122,15 @@ public class MainActivity extends Activity implements View.OnClickListener, Serv
             forwardButton.setEnabled(true);
             backButton.setEnabled(true);
             songTitle.setText("Now Playing: " + playerService.songTitles[playerService.mTrackPosition]);
+            if (playerService.mTrackPosition == 0){
+                songImage.setImageResource(R.drawable.neo);
+            } else if (playerService.mTrackPosition == 1){
+                songImage.setImageResource(R.drawable.summon);
+            } else if (playerService.mTrackPosition == 2){
+                songImage.setImageResource(R.drawable.lead);
+            } else if (playerService.mTrackPosition == 3){
+                songImage.setImageResource(R.drawable.zap);
+            }
         } else if (v.getId() == R.id.forwardButton) {
             playerService.onForward();
             playButton.setEnabled(false);
@@ -107,6 +139,15 @@ public class MainActivity extends Activity implements View.OnClickListener, Serv
             forwardButton.setEnabled(true);
             backButton.setEnabled(true);
             songTitle.setText("Now Playing: " + playerService.songTitles[playerService.mTrackPosition]);
+            if (playerService.mTrackPosition == 0){
+                songImage.setImageResource(R.drawable.neo);
+            } else if (playerService.mTrackPosition == 1){
+                songImage.setImageResource(R.drawable.summon);
+            } else if (playerService.mTrackPosition == 2){
+                songImage.setImageResource(R.drawable.lead);
+            } else if (playerService.mTrackPosition == 3){
+                songImage.setImageResource(R.drawable.zap);
+            }
         }
     }
 
