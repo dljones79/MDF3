@@ -159,8 +159,8 @@ public class PlayerService extends Service implements MediaPlayer.OnCompletionLi
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
         builder.setContentIntent(pIntent);
-        builder.setSmallIcon(R.drawable.ic_launcher);
-        builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher));
+        builder.setSmallIcon(R.drawable.mp);
+        builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.mp));
         builder.setContentTitle("Listening To: ");
         builder.setContentText(songPlaying);
         NotificationCompat.BigTextStyle bigTextStyle = new NotificationCompat.BigTextStyle();
