@@ -1,3 +1,9 @@
+// David Jones
+// Full Sail University
+// MDF 3 - 1409
+// Week 1 Fundamentals
+
+
 package com.fullsail.djones.android.fundamentalsapp;
 
 import android.annotation.TargetApi;
@@ -17,15 +23,16 @@ import android.support.v4.app.NotificationCompat;
 
 import java.io.IOException;
 
+// Custom Service Class for Media Player
 public class PlayerService extends Service implements MediaPlayer.OnCompletionListener, MediaPlayer.OnPreparedListener {
 
-    public static final int identifier = 1409;
-    MediaPlayer mediaPlayer;
-    boolean mPlayerPrepared;
-    boolean mActivityResumed;
-    int mTrackPosition;
-    String[] trackArray;
-    String[] songTitles;
+    // Initialize variables
+    MediaPlayer mediaPlayer;                                    // MediaPlayer
+    boolean mPlayerPrepared;                                    // Boolean to check if player is prepared
+    boolean mActivityResumed;                                   // Boolean to check if the player is resuming play
+    int mTrackPosition;                                         // Integer to check what track is playing
+    String[] trackArray;                                        // Array to hold file names of audio from raw file
+    String[] songTitles;                                        // Array to hold names of songs
     public static final int STANDARD_NOTIFICATION = 0x01001;
     public static final int EXPANDED_NOTIFICATION = 0x01002;
 
@@ -34,12 +41,15 @@ public class PlayerService extends Service implements MediaPlayer.OnCompletionLi
         super.onCreate();
         //Toast.makeText(this, "Service Created", Toast.LENGTH_SHORT).show();
 
+        // Assign data to string arrays
         trackArray = new String[]{"/raw/neo_western", "/raw/summon_the_rawk", "/raw/take_the_lead", "/raw/zap_beat"};
         songTitles = new String[]{"Neo Western", "Summon the Rawk", "Take the Lead", "Zap Beat"};
 
+        // Set prepared and resumed states to false and track position to zero
         mPlayerPrepared = mActivityResumed = false;
         mTrackPosition = 0;
 
+        // Check player status, set stream type, set OnPreparedListener, and set the data source
         if (mediaPlayer == null){
             mediaPlayer = new MediaPlayer();
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -57,6 +67,7 @@ public class PlayerService extends Service implements MediaPlayer.OnCompletionLi
 
     }
 
+    // Called on start
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (mediaPlayer == null){
@@ -65,10 +76,12 @@ public class PlayerService extends Service implements MediaPlayer.OnCompletionLi
         return START_STICKY;
     }
 
+    // Called on destroy
     @Override
     public void onDestroy(){
         super.onDestroy();
 
+        // If the media player is playing
         if (mediaPlayer != null){
             mediaPlayer.stop();
         }
@@ -81,8 +94,11 @@ public class PlayerService extends Service implements MediaPlayer.OnCompletionLi
         return new ServiceBinder();
     }
 
+    // When a song is complete
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
+
+        // If we're playing any song before last one in array
         if (mTrackPosition < trackArray.length - 1){
             mTrackPosition++;
             mediaPlayer.reset();
@@ -98,7 +114,9 @@ public class PlayerService extends Service implements MediaPlayer.OnCompletionLi
             }
 
             mediaPlayer.prepareAsync();
-        } else {
+        }
+        // If we're at the last song in the array
+        else {
             mTrackPosition = 0;
             mediaPlayer = new MediaPlayer();
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -114,6 +132,7 @@ public class PlayerService extends Service implements MediaPlayer.OnCompletionLi
         }
     }
 
+    // TargetApi used in order to utilize builder.build();
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onPrepared(MediaPlayer mediaPlayer) {
@@ -126,24 +145,16 @@ public class PlayerService extends Service implements MediaPlayer.OnCompletionLi
             mediaPlayer.start();
         }
 
+        // Create a string to hold title of the song being played
         String songPlaying = songTitles[mTrackPosition];
+
+        // New intent
         Intent intent = new Intent(this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+        // Create a notification item for the media player
         PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
-        /*
-        Notification.Builder nBuilder = new Notification.Builder(this);
 
-        nBuilder.setContentIntent(pIntent);
-        nBuilder.setSmallIcon(R.drawable.ic_launcher);
-        nBuilder.setTicker(songPlaying);
-        nBuilder.setOngoing(true);
-        nBuilder.setContentText(songPlaying);
-        nBuilder.setContentTitle("Listening To:");
-
-        Notification notification = nBuilder.build();
-
-        startForeground(identifier, notification);
-        */
         NotificationManager manager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
@@ -169,6 +180,11 @@ public class PlayerService extends Service implements MediaPlayer.OnCompletionLi
     }
 
     // Player Controls
+    // When play button is pressed
+    // Set track position to zero (First Song in Array)
+    // Start up a new media player
+    // Set Listeners and Data Source
+    // Prepare to play
     public void onPlay() {
         mTrackPosition = 0;
         mediaPlayer = new MediaPlayer();
@@ -184,6 +200,9 @@ public class PlayerService extends Service implements MediaPlayer.OnCompletionLi
         }
     }
 
+    // When pause button is pressed
+    // Pause the song if playing
+    // Resume the song if paused
     public void onPause() {
         if (mediaPlayer.isPlaying()){
             mediaPlayer.pause();
@@ -193,6 +212,7 @@ public class PlayerService extends Service implements MediaPlayer.OnCompletionLi
 
     }
 
+    // When a song is resumed from pause
     public void onResume() {
         mActivityResumed = true;
         if (mediaPlayer != null && !mPlayerPrepared){
@@ -202,6 +222,9 @@ public class PlayerService extends Service implements MediaPlayer.OnCompletionLi
         }
     }
 
+    // When stop button is pressed
+    // Stop the song
+    // Release the media player
     public void onStop() {
         mediaPlayer.stop();
         mediaPlayer.release();
@@ -209,6 +232,10 @@ public class PlayerService extends Service implements MediaPlayer.OnCompletionLi
         stopForeground(true);
     }
 
+    // When back button is pressed
+    // Check to see what position we are at
+    // If at first position, we skip back to the end of the array
+    // If not at first position, we just skip back one song
     public void onBack(){
         if (mTrackPosition == 0){
             mTrackPosition = trackArray.length -1;
@@ -241,6 +268,8 @@ public class PlayerService extends Service implements MediaPlayer.OnCompletionLi
         }
     }
 
+    // When forward button is pressed
+    // Basically same functionality as back button except in reverse
     public void onForward(){
         if (mTrackPosition < trackArray.length - 1){
             mTrackPosition++;
