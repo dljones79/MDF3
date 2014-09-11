@@ -12,6 +12,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -37,6 +38,7 @@ public class PlayerService extends Service implements MediaPlayer.OnCompletionLi
     String[] imageTitles;
     public static final int STANDARD_NOTIFICATION = 0x01001;
     public static final int EXPANDED_NOTIFICATION = 0x01002;
+
 
     //Shuffle Variables
     private boolean shuffle = false;
@@ -175,13 +177,36 @@ public class PlayerService extends Service implements MediaPlayer.OnCompletionLi
         builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.mp));
         builder.setContentTitle("Listening To: ");
         builder.setContentText(songPlaying);
+        /*
         NotificationCompat.BigTextStyle bigTextStyle = new NotificationCompat.BigTextStyle();
         bigTextStyle.bigText("Some awesome music on a less than awesome music player!");
         bigTextStyle.setBigContentTitle("You are Listening To: ");
         bigTextStyle.setSummaryText("A song called: " + songPlaying);
         builder.setStyle(bigTextStyle);
+        */
+        Bitmap bm = null;
+
+        if (mTrackPosition == 0){
+            bm = BitmapFactory.decodeResource(getResources(), R.drawable.neo);
+        } else if (mTrackPosition == 1){
+            bm = BitmapFactory.decodeResource(getResources(), R.drawable.summon);
+        } else if (mTrackPosition == 2){
+            bm = BitmapFactory.decodeResource(getResources(), R.drawable.lead);
+        } else if (mTrackPosition == 3){
+            bm = BitmapFactory.decodeResource(getResources(), R.drawable.zap);
+        }
+
+        NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle();
+        bigPictureStyle.setBigContentTitle("Now Playing:");
+        bigPictureStyle.setSummaryText(songPlaying);
+        bigPictureStyle.bigPicture(bm);
+        builder.setStyle(bigPictureStyle);
+
         //manager.notify(EXPANDED_NOTIFICATION, builder.build());
         startForeground(EXPANDED_NOTIFICATION, builder.build());
+
+
+
 
     }
 
