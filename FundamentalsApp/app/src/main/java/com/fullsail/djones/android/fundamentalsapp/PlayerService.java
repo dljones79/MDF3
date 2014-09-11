@@ -29,7 +29,7 @@ import java.util.Random;
 public class PlayerService extends Service implements MediaPlayer.OnCompletionListener, MediaPlayer.OnPreparedListener {
 
     // Initialize variables
-    MediaPlayer mediaPlayer;                                    // MediaPlayer
+    public MediaPlayer mediaPlayer;                                    // MediaPlayer
     boolean mPlayerPrepared;                                    // Boolean to check if player is prepared
     boolean mActivityResumed;                                   // Boolean to check if the player is resuming play
     int mTrackPosition;                                         // Integer to check what track is playing

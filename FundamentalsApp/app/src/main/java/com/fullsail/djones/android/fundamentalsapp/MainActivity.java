@@ -19,8 +19,8 @@ public class MainActivity extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mainFragment frag = mainFragment.newInstance();
-        getFragmentManager().beginTransaction().replace(R.id.container, frag, mainFragment.TAG).commit();
+        MainFragment frag = MainFragment.newInstance();
+        getFragmentManager().beginTransaction().replace(R.id.container, frag, MainFragment.TAG).commit();
     }
 
 }
