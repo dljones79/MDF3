@@ -78,4 +78,16 @@
         android:layout_alignRight="@+id/songText"
         android:layout_alignEnd="@+id/songText"
         android:layout_alignParentEnd="true" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Shuffle"
+        android:id="@+id/shuffleBox"
+        android:layout_toStartOf="@+id/playButton"
+        android:checked="false"
+        android:layout_alignTop="@+id/playButton"
+        android:layout_alignRight="@+id/backButton"
+        android:layout_alignEnd="@+id/backButton" />
+
 </RelativeLayout>

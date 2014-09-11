@@ -12,8 +12,10 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,8 +30,10 @@ public class MainActivity extends Activity implements View.OnClickListener, Serv
     Button stopButton;
     Button forwardButton;
     Button backButton;
+    CheckBox shuffleBox;
     TextView songTitle;                             // TextView variable
     ImageView songImage;
+    public static final String TAG = "Fundamentals_App.TAG";
 
     // Runs when activity is created
     @Override
@@ -53,6 +57,8 @@ public class MainActivity extends Activity implements View.OnClickListener, Serv
         forwardButton = (Button) findViewById(R.id.forwardButton);
         forwardButton.setOnClickListener(this);
         forwardButton.setEnabled(false);
+        shuffleBox = (CheckBox) findViewById(R.id.shuffleBox);
+        shuffleBox.setOnClickListener(this);
 
         // Set the text view variable and clear out the text.
         songTitle = (TextView) findViewById(R.id.songText);
@@ -74,6 +80,12 @@ public class MainActivity extends Activity implements View.OnClickListener, Serv
         // Runs methods according to what button was pressed.
         // Also sets whether or not buttons are enabled.
         if (v.getId() == R.id.playButton) {
+            if (shuffleBox.isChecked()){
+                playerService.onShuffle(true);
+            } else {
+                playerService.onShuffle(false);
+            }
+
             playerService.onPlay();
             playButton.setEnabled(false);
             pauseButton.setEnabled(true);
@@ -115,6 +127,13 @@ public class MainActivity extends Activity implements View.OnClickListener, Serv
                 songImage.setImageResource(R.drawable.zap);
             }
         } else if (v.getId() == R.id.backButton) {
+
+            if (shuffleBox.isChecked()){
+                playerService.onShuffle(true);
+            } else {
+                playerService.onShuffle(false);
+            }
+
             playerService.onBack();
             playButton.setEnabled(false);
             pauseButton.setEnabled(true);
@@ -132,6 +151,13 @@ public class MainActivity extends Activity implements View.OnClickListener, Serv
                 songImage.setImageResource(R.drawable.zap);
             }
         } else if (v.getId() == R.id.forwardButton) {
+
+            if (shuffleBox.isChecked()){
+                playerService.onShuffle(true);
+            } else {
+                playerService.onShuffle(false);
+            }
+
             playerService.onForward();
             playButton.setEnabled(false);
             pauseButton.setEnabled(true);
@@ -158,6 +184,7 @@ public class MainActivity extends Activity implements View.OnClickListener, Serv
         Intent intent = new Intent(this, PlayerService.class);
         bindService(intent, this, Context.BIND_AUTO_CREATE);
         startService(intent);
+        Log.i(TAG, "Service Started.");
     }
 
     // When the PlayerService is connected

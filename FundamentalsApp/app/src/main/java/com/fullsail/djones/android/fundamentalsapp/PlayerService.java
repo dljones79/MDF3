@@ -22,6 +22,7 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 
 import java.io.IOException;
+import java.util.Random;
 
 // Custom Service Class for Media Player
 public class PlayerService extends Service implements MediaPlayer.OnCompletionListener, MediaPlayer.OnPreparedListener {
@@ -37,6 +38,12 @@ public class PlayerService extends Service implements MediaPlayer.OnCompletionLi
     public static final int STANDARD_NOTIFICATION = 0x01001;
     public static final int EXPANDED_NOTIFICATION = 0x01002;
 
+    //Shuffle Variables
+    private boolean shuffle = false;
+    int min = 0;
+    int max = 3;
+    private Random random;
+
     @Override
     public void onCreate(){
         super.onCreate();
@@ -46,6 +53,9 @@ public class PlayerService extends Service implements MediaPlayer.OnCompletionLi
         trackArray = new String[]{"/raw/neo_western", "/raw/summon_the_rawk", "/raw/take_the_lead", "/raw/zap_beat"};
         songTitles = new String[]{"Neo Western", "Summon the Rawk", "Take the Lead", "Zap Beat"};
         imageTitles = new String[]{"neo", "summon", "lead", "zap"};
+
+        // Get random number for shuffle implementation (constrained to size of song array
+        random = new Random();
 
         // Set prepared and resumed states to false and track position to zero
         mPlayerPrepared = mActivityResumed = false;
@@ -170,7 +180,8 @@ public class PlayerService extends Service implements MediaPlayer.OnCompletionLi
         bigTextStyle.setBigContentTitle("You are Listening To: ");
         bigTextStyle.setSummaryText("A song called: " + songPlaying);
         builder.setStyle(bigTextStyle);
-        manager.notify(EXPANDED_NOTIFICATION, builder.build());
+        //manager.notify(EXPANDED_NOTIFICATION, builder.build());
+        startForeground(EXPANDED_NOTIFICATION, builder.build());
 
     }
 
@@ -188,7 +199,11 @@ public class PlayerService extends Service implements MediaPlayer.OnCompletionLi
     // Set Listeners and Data Source
     // Prepare to play
     public void onPlay() {
-        mTrackPosition = 0;
+        if (shuffle){
+            mTrackPosition = random.nextInt(max - min + 1) + min;
+        } else {
+            mTrackPosition = 0;
+        }
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mediaPlayer.setOnPreparedListener(PlayerService.this);
@@ -239,69 +254,110 @@ public class PlayerService extends Service implements MediaPlayer.OnCompletionLi
     // If at first position, we skip back to the end of the array
     // If not at first position, we just skip back one song
     public void onBack(){
-        if (mTrackPosition == 0){
-            mTrackPosition = trackArray.length -1;
+        if (shuffle){
+            mTrackPosition = random.nextInt(max - min + 1) + min;
             mediaPlayer.reset();
             mediaPlayer = new MediaPlayer();
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mediaPlayer.setOnPreparedListener(PlayerService.this);
             mediaPlayer.setOnCompletionListener(PlayerService.this);
 
-            try{
+            try {
                 mediaPlayer.setDataSource(PlayerService.this, Uri.parse("android.resource://" + getPackageName() + trackArray[mTrackPosition]));
-            } catch (IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
             }
             mediaPlayer.prepareAsync();
         } else {
-            mTrackPosition--;
-            mediaPlayer.reset();
-            mediaPlayer = new MediaPlayer();
-            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            mediaPlayer.setOnPreparedListener(PlayerService.this);
-            mediaPlayer.setOnCompletionListener(PlayerService.this);
 
-            try{
-                mediaPlayer.setDataSource(PlayerService.this, Uri.parse("android.resource://" + getPackageName() + trackArray[mTrackPosition]));
-            } catch (IOException e){
-                e.printStackTrace();
+            if (mTrackPosition == 0) {
+                mTrackPosition = trackArray.length - 1;
+                mediaPlayer.reset();
+                mediaPlayer = new MediaPlayer();
+                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                mediaPlayer.setOnPreparedListener(PlayerService.this);
+                mediaPlayer.setOnCompletionListener(PlayerService.this);
+
+                try {
+                    mediaPlayer.setDataSource(PlayerService.this, Uri.parse("android.resource://" + getPackageName() + trackArray[mTrackPosition]));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                mediaPlayer.prepareAsync();
+            } else {
+                mTrackPosition--;
+                mediaPlayer.reset();
+                mediaPlayer = new MediaPlayer();
+                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                mediaPlayer.setOnPreparedListener(PlayerService.this);
+                mediaPlayer.setOnCompletionListener(PlayerService.this);
+
+                try {
+                    mediaPlayer.setDataSource(PlayerService.this, Uri.parse("android.resource://" + getPackageName() + trackArray[mTrackPosition]));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                mediaPlayer.prepareAsync();
             }
-            mediaPlayer.prepareAsync();
         }
     }
 
     // When forward button is pressed
     // Basically same functionality as back button except in reverse
     public void onForward(){
-        if (mTrackPosition < trackArray.length - 1){
-            mTrackPosition++;
+        if (shuffle){
+            mTrackPosition = random.nextInt(max - min + 1) + min;
             mediaPlayer.reset();
             mediaPlayer = new MediaPlayer();
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mediaPlayer.setOnPreparedListener(PlayerService.this);
             mediaPlayer.setOnCompletionListener(PlayerService.this);
 
-            try{
+            try {
                 mediaPlayer.setDataSource(PlayerService.this, Uri.parse("android.resource://" + getPackageName() + trackArray[mTrackPosition]));
-            } catch (IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
             }
             mediaPlayer.prepareAsync();
         } else {
-            mTrackPosition = 0;
-            mediaPlayer.reset();
-            mediaPlayer = new MediaPlayer();
-            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            mediaPlayer.setOnPreparedListener(PlayerService.this);
-            mediaPlayer.setOnCompletionListener(PlayerService.this);
+            if (mTrackPosition < trackArray.length - 1) {
+                mTrackPosition++;
+                mediaPlayer.reset();
+                mediaPlayer = new MediaPlayer();
+                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                mediaPlayer.setOnPreparedListener(PlayerService.this);
+                mediaPlayer.setOnCompletionListener(PlayerService.this);
 
-            try{
-                mediaPlayer.setDataSource(PlayerService.this, Uri.parse("android.resource://" + getPackageName() + trackArray[mTrackPosition]));
-            } catch (IOException e){
-                e.printStackTrace();
+                try {
+                    mediaPlayer.setDataSource(PlayerService.this, Uri.parse("android.resource://" + getPackageName() + trackArray[mTrackPosition]));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                mediaPlayer.prepareAsync();
+            } else {
+                mTrackPosition = 0;
+                mediaPlayer.reset();
+                mediaPlayer = new MediaPlayer();
+                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                mediaPlayer.setOnPreparedListener(PlayerService.this);
+                mediaPlayer.setOnCompletionListener(PlayerService.this);
+
+                try {
+                    mediaPlayer.setDataSource(PlayerService.this, Uri.parse("android.resource://" + getPackageName() + trackArray[mTrackPosition]));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                mediaPlayer.prepareAsync();
             }
-            mediaPlayer.prepareAsync();
         }
     }
 
+    public void onShuffle(Boolean bool) {
+
+        if (bool){
+            shuffle = true;
+        } else {
+            shuffle = false;
+        }
+    }
 }
