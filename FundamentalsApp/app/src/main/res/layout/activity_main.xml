@@ -9,85 +9,11 @@
     tools:context=".MainActivity">
 
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Song Title"
-        android:id="@+id/songText"
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:textAlignment="center" />
-
-    <Button
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:text="Play"
-        android:id="@+id/playButton"
-        android:layout_above="@+id/pauseButton"
-        android:layout_centerHorizontal="true" />
-
-    <Button
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:text="Stop"
-        android:id="@+id/stopButton"
-        android:layout_alignParentBottom="true"
-        android:layout_alignLeft="@+id/pauseButton"
-        android:layout_alignStart="@+id/pauseButton" />
-
-    <Button
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:text="||"
-        android:id="@+id/pauseButton"
-        android:layout_alignBaseline="@+id/backButton"
-        android:layout_alignBottom="@+id/backButton"
-        android:layout_alignLeft="@+id/playButton"
-        android:layout_alignStart="@+id/playButton" />
-
-    <Button
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:text="Forward"
-        android:id="@+id/forwardButton"
-        android:layout_above="@+id/stopButton"
-        android:layout_alignRight="@+id/songText"
-        android:layout_alignEnd="@+id/songText" />
-
-    <Button
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:text="Back"
-        android:id="@+id/backButton"
-        android:layout_alignTop="@+id/forwardButton"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:id="@+id/imageView"
-        android:layout_toEndOf="@+id/backButton"
-        android:layout_above="@+id/playButton"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/songText"
-        android:layout_alignEnd="@+id/songText"
-        android:layout_alignParentEnd="true" />
-
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Shuffle"
-        android:id="@+id/shuffleBox"
-        android:layout_toStartOf="@+id/playButton"
-        android:checked="false"
-        android:layout_alignTop="@+id/playButton"
-        android:layout_alignRight="@+id/backButton"
-        android:layout_alignEnd="@+id/backButton" />
-
+        android:id="@+id/container"></RelativeLayout>
 </RelativeLayout>
