@@ -23,6 +23,7 @@ import android.view.ViewGroup;
  */
 public class ListFragment extends Fragment {
 
+    public static final String TAG = "ListFragment.TAG";
 
     public ListFragment() {
         // Required empty public constructor
@@ -37,4 +38,8 @@ public class ListFragment extends Fragment {
     }
 
 
+    public static ListFragment newInstance() {
+        ListFragment fragment = new ListFragment();
+        return fragment;
+    } // end of ListFragment newInstance()
 }
