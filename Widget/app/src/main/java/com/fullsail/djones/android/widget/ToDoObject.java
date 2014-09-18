@@ -17,6 +17,10 @@ public class ToDoObject implements Serializable {
     private String mDate;
     private String mNotes;
 
+    public ToDoObject(){
+
+    }
+
     public ToDoObject(String _event, String _date, String _notes){
         mEvent = _event;
         mDate = _date;

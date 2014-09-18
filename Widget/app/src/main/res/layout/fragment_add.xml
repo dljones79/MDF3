@@ -75,7 +75,7 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/editText"
+        android:id="@+id/notesText"
         android:layout_alignBottom="@+id/notesLabel"
         android:layout_toRightOf="@+id/dateLabel"
         android:layout_toEndOf="@+id/dateLabel"
