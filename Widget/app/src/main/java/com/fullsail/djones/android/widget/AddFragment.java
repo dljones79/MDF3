@@ -18,8 +18,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-import java.util.ArrayList;
-
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,7 +32,6 @@ public class AddFragment extends Fragment {
     EditText mDateText;
     EditText mNotesText;
     ToDoObject todoObj;
-    ArrayList<ToDoObject> todoObjects = new ArrayList<ToDoObject>();
 
     public AddFragment() {
         // Required empty public constructor

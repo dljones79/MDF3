@@ -12,13 +12,18 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 
@@ -30,8 +35,9 @@ public class ListFragment extends Fragment {
 
     public static final String TAG = "ListFragment.TAG";
     private static final int REQUEST_CODE = 2;
-    private ArrayList<ToDoObject> passedEvent;
+    private ArrayList<ToDoObject> passedEvents;
     private EventListener mListener;
+    private AppWidgetViewFactory viewFactory;
 
     public ListFragment() {
         // Required empty public constructor
@@ -69,6 +75,7 @@ public class ListFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         View view = getView();
+        viewFactory = new AppWidgetViewFactory(getActivity());
 
         Button addButton = (Button) view.findViewById(R.id.addButton);
 
@@ -89,20 +96,40 @@ public class ListFragment extends Fragment {
                 */
             }
         });
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                mListener.viewEvent(i);
+            }
+        });
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         if (resultCode == getActivity().RESULT_OK && requestCode == REQUEST_CODE){
             if (data.hasExtra("returnKey")){
-                passedEvent.add((ToDoObject) data.getSerializableExtra("returnKey"));
+                passedEvents.add((ToDoObject) data.getSerializableExtra("returnKey"));
+                try{
+                    FileOutputStream fos = getActivity().openFileOutput("data.txt", getActivity().MODE_PRIVATE);
+                    ObjectOutputStream oos = new ObjectOutputStream(fos);
+                    oos.writeInt(passedEvents.size());
+                    for (ToDoObject e:passedEvents){
+                        oos.writeObject(e);
+                    }
+                    oos.close();
+                    Log.i(TAG, "Data Saved");
+                } catch (IOException e){
+                    e.printStackTrace();
+                }
+
                 ListFragment lf = (ListFragment) getFragmentManager().findFragmentById(R.id.container);
                 lf.updateListData();
             }
         }
     }
 
-    public void setEvents (ArrayList<ToDoObject> events) { passedEvent = events; }
+    public void setEvents (ArrayList<ToDoObject> events) { passedEvents = events; }
 
     private void updateListData() {
         ListView eventList = (ListView) getView().findViewById(R.id.listView);
