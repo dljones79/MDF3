@@ -85,7 +85,7 @@ public class AppWidgetViewFactory implements RemoteViewsService.RemoteViewsFacto
 
     @Override
     public void onDataSetChanged() {
-
+        loadData();
     }
 
     @Override

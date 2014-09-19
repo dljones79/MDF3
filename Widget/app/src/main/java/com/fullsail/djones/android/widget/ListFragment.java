@@ -10,6 +10,8 @@ package com.fullsail.djones.android.widget;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -37,7 +39,7 @@ public class ListFragment extends Fragment {
     private static final int REQUEST_CODE = 2;
     private ArrayList<ToDoObject> passedEvents;
     private EventListener mListener;
-    private AppWidgetViewFactory viewFactory;
+    private int mWidgetId;
 
     public ListFragment() {
         // Required empty public constructor
@@ -75,7 +77,6 @@ public class ListFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         View view = getView();
-        viewFactory = new AppWidgetViewFactory(getActivity());
 
         Button addButton = (Button) view.findViewById(R.id.addButton);
 
@@ -123,6 +124,27 @@ public class ListFragment extends Fragment {
                     e.printStackTrace();
                 }
 
+                AppWidgetViewFactory appWidgetViewFactory = new AppWidgetViewFactory(getActivity());
+                appWidgetViewFactory.loadData();
+
+                updateAllWidgets();
+                /*
+                AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getActivity());
+                ComponentName thisWidget = new ComponentName(getActivity(), AppWidget.class);
+                int[] allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
+                AppWidget appWidget = new AppWidget();
+                appWidget.onUpdate(getActivity(), appWidgetManager, allWidgetIds);
+                */
+                /*
+                for (int widgetId : allWidgetIds){
+
+                    RemoteViews remoteViews = new RemoteViews(getActivity().getPackageName(), R.layout.app_widget);
+                    appWidgetManager.updateAppWidget(widgetId, remoteViews);
+
+                    appWidget.onUpdate(getActivity(), appWidgetManager, allWidgetIds);
+                }
+                */
+
                 ListFragment lf = (ListFragment) getFragmentManager().findFragmentById(R.id.container);
                 lf.updateListData();
             }
@@ -135,6 +157,14 @@ public class ListFragment extends Fragment {
         ListView eventList = (ListView) getView().findViewById(R.id.listView);
         BaseAdapter eventAdapter = (BaseAdapter) eventList.getAdapter();
         eventAdapter.notifyDataSetChanged();
+    }
+
+    private void updateAllWidgets(){
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getActivity());
+        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(getActivity(), AppWidget.class));
+        if (appWidgetIds.length > 0) {
+            new AppWidget().onUpdate(getActivity(), appWidgetManager, appWidgetIds);
+        }
     }
 
 

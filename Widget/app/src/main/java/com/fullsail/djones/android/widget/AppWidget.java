@@ -12,6 +12,7 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.widget.RemoteViews;
 
 
@@ -33,6 +34,8 @@ public class AppWidget extends AppWidgetProvider {
             updateAppWidget(context, appWidgetManager, appWidgetIds[i]);
         }
         */
+        Log.i("AppWidget", "onUpdate Running Now");
+
         for (int i = 0; i < appWidgetIds.length; i++) {
 
             int widgetId = appWidgetIds[i];
@@ -49,6 +52,8 @@ public class AppWidget extends AppWidgetProvider {
             widgetView.setPendingIntentTemplate(R.id.event_list, pendingIntent);
 
             appWidgetManager.updateAppWidget(widgetId, widgetView);
+
+            appWidgetManager.notifyAppWidgetViewDataChanged(widgetId, R.id.event_list);
         }
         super.onUpdate(context, appWidgetManager, appWidgetIds);
     }
