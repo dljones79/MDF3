@@ -39,7 +39,8 @@ public class ListFragment extends Fragment {
     private static final int REQUEST_CODE = 2;
     private ArrayList<ToDoObject> passedEvents;
     private EventListener mListener;
-    private int mWidgetId;
+    public Boolean willAdd = false;
+
 
     public ListFragment() {
         // Required empty public constructor
@@ -98,6 +99,10 @@ public class ListFragment extends Fragment {
             }
         });
 
+        if (willAdd){
+            clickAdd();
+        }
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -108,6 +113,7 @@ public class ListFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
+        Log.i(TAG, "onActivityResult running.");
         if (resultCode == getActivity().RESULT_OK && requestCode == REQUEST_CODE){
             if (data.hasExtra("returnKey")){
                 passedEvents.add((ToDoObject) data.getSerializableExtra("returnKey"));
@@ -148,6 +154,8 @@ public class ListFragment extends Fragment {
                 ListFragment lf = (ListFragment) getFragmentManager().findFragmentById(R.id.container);
                 lf.updateListData();
             }
+        } else {
+            Log.i(TAG, "Error with result.");
         }
     }
 
@@ -165,6 +173,16 @@ public class ListFragment extends Fragment {
         if (appWidgetIds.length > 0) {
             new AppWidget().onUpdate(getActivity(), appWidgetManager, appWidgetIds);
         }
+    }
+
+    public void clickAdd(){
+        View view = getView();
+        Button addButton = (Button) view.findViewById(R.id.addButton);
+        addButton.performClick();
+    }
+
+    public void setFlag(){
+        willAdd = true;
     }
 
 

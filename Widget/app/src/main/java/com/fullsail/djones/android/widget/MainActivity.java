@@ -11,6 +11,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.Button;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -24,9 +28,9 @@ public class MainActivity extends Activity implements ListFragment.EventListener
     public ArrayList<ToDoObject> events = new ArrayList<ToDoObject>();
     private static final String TAG = "MainActivity.TAG";
     static final String STATE_ARRAY = "events";
-
-    //Widget
-    private int mWidgetId;
+    public static final String ADDEXTRA = "com.fullsail.djones.android.widget.Add";
+    private String willAdd = "";
+    private String testString = "addEvent";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +38,15 @@ public class MainActivity extends Activity implements ListFragment.EventListener
         setContentView(R.layout.activity_main);
 
         Intent intent = getIntent();
+
         if (intent != null){
+            try {
+                willAdd = intent.getStringExtra(ADDEXTRA);
+                Log.i(TAG, willAdd.toString());
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+
             event.setEvent(intent.getStringExtra("eventName"));
             event.setDate(intent.getStringExtra("eventDate"));
             event.setNotes(intent.getStringExtra("eventNotes"));
@@ -49,7 +61,19 @@ public class MainActivity extends Activity implements ListFragment.EventListener
             } catch (Exception e){
                 e.printStackTrace();
             }
+            try {
+                if (willAdd.matches(testString)) {
+                    Log.i(TAG, "willAdd = addEvent");
+                    frag.setFlag();
+                } else {
+                    Log.i(TAG, "willAdd != addEvent");
+                }
+            } catch (Exception e){
+                e.printStackTrace();
+            }
             getFragmentManager().beginTransaction().replace(R.id.container, frag, ListFragment.TAG).commit();
+
+
         } else {
             Log.i(TAG, "Saved instance state != null");
         }
@@ -95,6 +119,26 @@ public class MainActivity extends Activity implements ListFragment.EventListener
         super.onRestoreInstanceState(savedInstanceState);
 
         events = (ArrayList<ToDoObject>) savedInstanceState.getSerializable(STATE_ARRAY);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()) {
+            case R.id.action_add:
+                Log.i(TAG, "Add Button Pressed.");
+                Button addButton = (Button) this.findViewById(R.id.addButton);
+                addButton.performClick();
+                break;
+        }
+
+        return true;
     }
 
 }

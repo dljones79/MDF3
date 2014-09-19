@@ -23,6 +23,8 @@ public class AppWidget extends AppWidgetProvider {
 
     public static final String ACTION_VIEW_DETAILS = "com.fullsail.djones.android.ACTION_VIEW_DETAILS";
     public static final String EXTRA_ITEM = "com.fullsail.djones.android.AppWidget.EXTRA_ITEM";
+    public static final String ACTION_VIEW_ADD = "com.fullsail.djones.android.ACTION_VIEW_ADD";
+    private static final int REQUEST_CODE = 2;
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -51,6 +53,10 @@ public class AppWidget extends AppWidgetProvider {
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, detailIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             widgetView.setPendingIntentTemplate(R.id.event_list, pendingIntent);
 
+            Intent addIntent = new Intent(ACTION_VIEW_ADD);
+            PendingIntent pendingIntent2 = PendingIntent.getBroadcast(context, 0, addIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            widgetView.setOnClickPendingIntent(R.id.addButton, pendingIntent2);
+
             appWidgetManager.updateAppWidget(widgetId, widgetView);
 
             appWidgetManager.notifyAppWidgetViewDataChanged(widgetId, R.id.event_list);
@@ -68,6 +74,12 @@ public class AppWidget extends AppWidgetProvider {
                 details.putExtra(DetailsActivity.EVENTEXTRA, event);
                 context.startActivity(details);
             }
+        } else if (intent.getAction().equals(ACTION_VIEW_ADD)){
+            Intent add = new Intent(context, MainActivity.class);
+            add.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            add.putExtra(MainActivity.ADDEXTRA, "addEvent");
+            context.startActivity(add);
+
         }
         super.onReceive(context, intent);
     }

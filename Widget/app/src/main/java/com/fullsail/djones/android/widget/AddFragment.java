@@ -12,6 +12,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -86,6 +87,7 @@ public class AddFragment extends Fragment {
     }
 
     private void finish() {
+        Log.i(TAG, "Finish() Called.");
         Intent data = new Intent();
         data.putExtra("returnKey", todoObj);
         getActivity().setResult(Activity.RESULT_OK, data);

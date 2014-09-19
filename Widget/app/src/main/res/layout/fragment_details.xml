@@ -12,7 +12,8 @@
         android:text="Large Text"
         android:id="@+id/eventText"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignLeft="@+id/dateText"
+        android:layout_alignStart="@+id/dateText" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -52,10 +53,25 @@
         android:text="Large Text"
         android:id="@+id/notesText"
         android:layout_toEndOf="@+id/notesLabel"
+        android:layout_toRightOf="@+id/notesLabel"
+        android:lines="10"
+        android:linksClickable="false"
         android:layout_alignTop="@+id/notesLabel"
+        android:layout_alignLeft="@+id/dateText"
+        android:layout_alignStart="@+id/dateText"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:lines="10"
-        android:linksClickable="false" />
+        android:layout_alignBottom="@+id/notesLabel" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Event:"
+        android:id="@+id/eventLabel"
+        android:layout_toStartOf="@+id/eventText"
+        android:layout_toLeftOf="@+id/eventText"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>
