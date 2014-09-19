@@ -1,3 +1,10 @@
+//////////////////////////
+// David Jones          //
+// MDF-3 1409           //
+// Week 3 Widgets       //
+// Full Sail University //
+//////////////////////////
+
 package com.fullsail.djones.android.widget;
 
 import android.content.Context;
@@ -29,16 +36,7 @@ public class AppWidgetViewFactory implements RemoteViewsService.RemoteViewsFacto
 
     @Override
     public void onCreate(){
-
-        /*
-        MainActivity main = new MainActivity();
-        if (main.events != null){
-            mEvents = main.events;
-            Log.i(TAG, "Events loaded.");
-        } else {
-            Log.i(TAG, "Events null.");
-        }
-        */
+        // Load data from storage
         loadData();
 
         Log.i(TAG, mEvents.toString());

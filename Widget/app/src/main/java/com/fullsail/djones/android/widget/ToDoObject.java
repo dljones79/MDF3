@@ -5,6 +5,8 @@
 // Full Sail University //
 //////////////////////////
 
+// This custom object class is used to serialize data and store to device
+
 package com.fullsail.djones.android.widget;
 
 import java.io.Serializable;

@@ -1,3 +1,10 @@
+//////////////////////////
+// David Jones          //
+// MDF-3 1409           //
+// Week 3 Widgets       //
+// Full Sail University //
+//////////////////////////
+
 package com.fullsail.djones.android.widget;
 
 import android.app.Activity;
@@ -26,6 +33,7 @@ public class DetailsActivity extends Activity implements DetailsFragment.DetailL
                     .commit();
         }
 
+        // This checks to see if we're coming from the Widget
         Intent detailIntent = getIntent();
         if (detailIntent != null){
             event = (ToDoObject) detailIntent.getSerializableExtra(EVENTEXTRA);

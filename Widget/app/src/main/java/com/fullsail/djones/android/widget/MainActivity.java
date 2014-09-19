@@ -24,11 +24,14 @@ import java.util.ArrayList;
 
 public class MainActivity extends Activity implements ListFragment.EventListener{
 
+    // Initialize Public Variables
     public ToDoObject event = new ToDoObject();
     public ArrayList<ToDoObject> events = new ArrayList<ToDoObject>();
+    public static final String ADDEXTRA = "com.fullsail.djones.android.widget.Add";
+
+    // Initialize Private Variables
     private static final String TAG = "MainActivity.TAG";
     static final String STATE_ARRAY = "events";
-    public static final String ADDEXTRA = "com.fullsail.djones.android.widget.Add";
     private String willAdd = "";
     private String testString = "addEvent";
 
@@ -37,9 +40,15 @@ public class MainActivity extends Activity implements ListFragment.EventListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Get passed intent from either AddActivity or Widget
         Intent intent = getIntent();
 
         if (intent != null){
+
+            // Here we attempt to grab data from the Widget, in order to start the AddActivity
+            // I did it this way, in order to get a result back.
+            // I was initially just starting the AddActivity from my Widget, but it wasn't returning
+            // anything upon completion.
             try {
                 willAdd = intent.getStringExtra(ADDEXTRA);
                 Log.i(TAG, willAdd.toString());
@@ -52,6 +61,7 @@ public class MainActivity extends Activity implements ListFragment.EventListener
             event.setNotes(intent.getStringExtra("eventNotes"));
         }
 
+        // Call custom method to load data from storage
         loadData();
 
         if (savedInstanceState == null){
@@ -61,6 +71,11 @@ public class MainActivity extends Activity implements ListFragment.EventListener
             } catch (Exception e){
                 e.printStackTrace();
             }
+
+            // Here, depending on if MainActivity is called from the Widget
+            // We test to see if the passed intent matches
+            // if so...we call the setFlag method in my ListFragment.
+            // This will allow us to instantly click the add button if true.
             try {
                 if (willAdd.matches(testString)) {
                     Log.i(TAG, "willAdd = addEvent");
@@ -80,6 +95,7 @@ public class MainActivity extends Activity implements ListFragment.EventListener
 
     }
 
+    // This is a custo method to load data from storage
     public void loadData(){
         try {
             FileInputStream fin = openFileInput("data.txt");
@@ -96,6 +112,8 @@ public class MainActivity extends Activity implements ListFragment.EventListener
         }
     }
 
+    // This method is called when we click on a list item.
+    // Starts the DetailsActivity
     @Override
     public void viewEvent(int position) {
         Intent detailIntent = new Intent (this, DetailsActivity.class);
@@ -103,6 +121,7 @@ public class MainActivity extends Activity implements ListFragment.EventListener
         startActivity(detailIntent);
     }
 
+    // Returns arrayList of events
     @Override
     public ArrayList<ToDoObject> getEvents() {
         return events;

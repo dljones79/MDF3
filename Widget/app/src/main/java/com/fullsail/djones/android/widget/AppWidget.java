@@ -28,16 +28,10 @@ public class AppWidget extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        // There may be multiple widgets active, so update all of them
-        /*
-        final int N = appWidgetIds.length;
 
-        for (int i=0; i<N; i++) {
-            updateAppWidget(context, appWidgetManager, appWidgetIds[i]);
-        }
-        */
         Log.i("AppWidget", "onUpdate Running Now");
 
+        // Update all Widgets
         for (int i = 0; i < appWidgetIds.length; i++) {
 
             int widgetId = appWidgetIds[i];
@@ -66,6 +60,8 @@ public class AppWidget extends AppWidgetProvider {
 
     @Override
     public void onReceive(Context context, Intent intent){
+
+        // If list item is clicked
         if (intent.getAction().equals(ACTION_VIEW_DETAILS)){
             ToDoObject event = (ToDoObject)intent.getSerializableExtra(EXTRA_ITEM);
             if (event != null){
@@ -74,12 +70,12 @@ public class AppWidget extends AppWidgetProvider {
                 details.putExtra(DetailsActivity.EVENTEXTRA, event);
                 context.startActivity(details);
             }
+        // If add button is clicked
         } else if (intent.getAction().equals(ACTION_VIEW_ADD)){
             Intent add = new Intent(context, MainActivity.class);
             add.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             add.putExtra(MainActivity.ADDEXTRA, "addEvent");
             context.startActivity(add);
-
         }
         super.onReceive(context, intent);
     }

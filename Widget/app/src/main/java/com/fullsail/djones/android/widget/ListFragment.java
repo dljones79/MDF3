@@ -29,12 +29,9 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 
-/**
- * A simple {@link Fragment} subclass.
- *
- */
 public class ListFragment extends Fragment {
 
+    // Initialize Variables
     public static final String TAG = "ListFragment.TAG";
     private static final int REQUEST_CODE = 2;
     private ArrayList<ToDoObject> passedEvents;
@@ -46,6 +43,7 @@ public class ListFragment extends Fragment {
         // Required empty public constructor
     }
 
+    // Interface
     public interface EventListener{
         public void viewEvent(int position);
         public ArrayList<ToDoObject> getEvents();
@@ -77,10 +75,13 @@ public class ListFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
 
+        // Get current view
         View view = getView();
 
+        // Get button
         Button addButton = (Button) view.findViewById(R.id.addButton);
 
+        // Get the listview and create listeners for Button and ListView
         ListView listView = (ListView) getView().findViewById(R.id.listView);
         EventAdapter eventAdapter = new EventAdapter(getActivity(), mListener.getEvents());
         listView.setAdapter(eventAdapter);
@@ -99,10 +100,14 @@ public class ListFragment extends Fragment {
             }
         });
 
+        // This is called when we click the Add Button from the Widget
+        // This has been the only way I've been able to return a result back to the MainActivity
+        // when calling the AddActivity from my Widget
         if (willAdd){
             clickAdd();
         }
 
+        // Set a click listener for the listview
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -111,12 +116,15 @@ public class ListFragment extends Fragment {
         });
     }
 
+    // Called when data is returned from the AddActivity
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         Log.i(TAG, "onActivityResult running.");
         if (resultCode == getActivity().RESULT_OK && requestCode == REQUEST_CODE){
             if (data.hasExtra("returnKey")){
                 passedEvents.add((ToDoObject) data.getSerializableExtra("returnKey"));
+
+                // Here we save data out to storage for later use
                 try{
                     FileOutputStream fos = getActivity().openFileOutput("data.txt", getActivity().MODE_PRIVATE);
                     ObjectOutputStream oos = new ObjectOutputStream(fos);
@@ -130,27 +138,14 @@ public class ListFragment extends Fragment {
                     e.printStackTrace();
                 }
 
+                // Get a new instance of AppWidgetFactory and load data
                 AppWidgetViewFactory appWidgetViewFactory = new AppWidgetViewFactory(getActivity());
                 appWidgetViewFactory.loadData();
 
+                // Call custom method to update all widgets
                 updateAllWidgets();
-                /*
-                AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getActivity());
-                ComponentName thisWidget = new ComponentName(getActivity(), AppWidget.class);
-                int[] allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
-                AppWidget appWidget = new AppWidget();
-                appWidget.onUpdate(getActivity(), appWidgetManager, allWidgetIds);
-                */
-                /*
-                for (int widgetId : allWidgetIds){
 
-                    RemoteViews remoteViews = new RemoteViews(getActivity().getPackageName(), R.layout.app_widget);
-                    appWidgetManager.updateAppWidget(widgetId, remoteViews);
-
-                    appWidget.onUpdate(getActivity(), appWidgetManager, allWidgetIds);
-                }
-                */
-
+                // Update ListView on the ListFragment when data is added
                 ListFragment lf = (ListFragment) getFragmentManager().findFragmentById(R.id.container);
                 lf.updateListData();
             }
@@ -161,12 +156,14 @@ public class ListFragment extends Fragment {
 
     public void setEvents (ArrayList<ToDoObject> events) { passedEvents = events; }
 
+    // Custom method to update the ListView
     private void updateListData() {
         ListView eventList = (ListView) getView().findViewById(R.id.listView);
         BaseAdapter eventAdapter = (BaseAdapter) eventList.getAdapter();
         eventAdapter.notifyDataSetChanged();
     }
 
+    // Custom method to update all widgets running
     private void updateAllWidgets(){
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getActivity());
         int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(getActivity(), AppWidget.class));
@@ -175,12 +172,14 @@ public class ListFragment extends Fragment {
         }
     }
 
+    // Custom method to click the addbutton
     public void clickAdd(){
         View view = getView();
         Button addButton = (Button) view.findViewById(R.id.addButton);
         addButton.performClick();
     }
 
+    // Custom method to set flag when passing intent from the Widget
     public void setFlag(){
         willAdd = true;
     }

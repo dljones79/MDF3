@@ -56,6 +56,8 @@ public class DetailsFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
 
+        // Set text according to what item was clicked on the list view
+        // Data was passed over
         final TextView eventName = (TextView) getView().findViewById(R.id.eventText);
         eventName.setText(mListener.getEvent().getEvent());
         final TextView eventDate = (TextView) getView().findViewById(R.id.dateText);
