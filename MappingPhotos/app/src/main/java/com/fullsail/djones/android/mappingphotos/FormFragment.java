@@ -1,20 +1,24 @@
 package com.fullsail.djones.android.mappingphotos;
 
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -73,7 +77,62 @@ public class FormFragment extends Fragment {
                     cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
                 }
                 startActivityForResult(cameraIntent, REQUEST_TAKE_PICTURE);
+            }
+        });
 
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String nameText = mNameText.getText().toString();
+                String noteText = mNoteText.getText().toString();
+                String testName = getString(R.string.alert_name);
+                String testNote = getString(R.string.alert_note);
+
+                if (nameText.length() != 0 && noteText.length() != 0 && mImageView.getDrawable() != null &&
+                        !nameText.matches(testName) && !noteText.matches(testNote)){
+                    Toast.makeText(getActivity().getApplicationContext(), "Will Save.", Toast.LENGTH_SHORT).show();
+
+                } else {
+                    if (mNameText.getText().length() == 0){
+                        mNameText.setText(R.string.alert_name);
+                        mNameText.setTextColor(Color.RED);
+                    }
+
+                    if (mNoteText.getText().length() == 0){
+                        mNoteText.setText(R.string.alert_note);
+                        mNoteText.setTextColor(Color.RED);
+                    }
+                    new AlertDialog.Builder(getActivity())
+                            .setTitle("Error")
+                            .setMessage("Name, notes, and image must be saved.  Please enter required fields.")
+                            .setPositiveButton("Ok", null)
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+
+
+                }
+            }
+        });
+
+        mNameText.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if(MotionEvent.ACTION_UP == motionEvent.getAction()){
+                    mNameText.setText("");
+                    mNameText.setTextColor(Color.BLACK);
+                }
+                return true;
+            }
+        });
+
+        mNoteText.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if(MotionEvent.ACTION_UP == motionEvent.getAction()){
+                    mNoteText.setText("");
+                    mNoteText.setTextColor(Color.BLACK);
+                }
+                return true;
             }
         });
 
