@@ -5,8 +5,6 @@
 
 package com.fullsail.djones.android.mappingphotos;
 
-import android.graphics.Bitmap;
-
 import java.io.Serializable;
 
 public class DataObject implements Serializable {
@@ -15,27 +13,39 @@ public class DataObject implements Serializable {
 
     private String mName;
     private String mNote;
-    private Bitmap mBitmap;
+    private String mUri;
+    private Double mLatitude;
+    private Double mLongitude;
 
     public DataObject(){
         // Empty Constructor
     }
 
-    public DataObject(String _name, String _note, Bitmap _bitmap){
+    public DataObject(String _name, String _note, String _uri, Double _latitude, Double _longitude){
         mName = _name;
         mNote = _note;
-        mBitmap = _bitmap;
+        mUri = _uri;
+        mLatitude = _latitude;
+        mLongitude = _longitude;
     }
 
     public String getName() { return mName; }
 
     public String getNote() { return mNote; }
 
-    public Bitmap getBitmap() { return mBitmap; }
+    public String getUri() { return mUri; }
+
+    public Double getLatitude() { return mLatitude; }
+
+    public Double getLongitude() { return mLongitude; }
 
     public void setName(String mName) { this.mName = mName; }
 
     public void setNote(String mNote) { this.mNote = mNote; }
 
-    public void setBitmap(Bitmap mBitmap) { this.mBitmap = mBitmap; }
+    public void setUri(String mUri) { this.mUri = mUri; }
+
+    public void setLatitude(Double mLatitude) { this.mLatitude = mLatitude; }
+
+    public void setLongitude(Double mLongitude) { this.mLongitude = mLongitude; }
 }

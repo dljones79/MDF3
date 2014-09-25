@@ -51,7 +51,10 @@
         android:layout_toRightOf="@+id/textView2"
         android:layout_toEndOf="@+id/textView2"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:editable="true"
+        android:enabled="true"
+        android:focusableInTouchMode="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -73,7 +76,10 @@
         android:layout_toRightOf="@+id/textView2"
         android:layout_toEndOf="@+id/textView2"
         android:layout_alignRight="@+id/nameText"
-        android:layout_alignEnd="@+id/nameText" />
+        android:layout_alignEnd="@+id/nameText"
+        android:editable="true"
+        android:enabled="true"
+        android:focusableInTouchMode="true" />
 
     <ImageView
         android:layout_width="150dp"

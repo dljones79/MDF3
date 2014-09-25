@@ -5,18 +5,23 @@
 
 package com.fullsail.djones.android.mappingphotos;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -25,13 +30,20 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
-public class FormFragment extends Fragment {
+public class FormFragment extends Fragment implements LocationListener{
 
     public static final String TAG = "FormFragment.TAG";
     private static final int REQUEST_TAKE_PICTURE = 0x10101;
+    private static final int REQUEST_ENABLE_GPS = 0x02101;
 
     // Initialize variables
     Button captureButton;
@@ -41,6 +53,10 @@ public class FormFragment extends Fragment {
     DataObject dataObject;
     Uri mImageUri;
     ImageView mImageView;
+    ArrayList<DataObject> locations;
+    LocationManager mManager;
+    Double mLatitude;
+    Double mLongitude;
 
     public FormFragment() {
         // Required empty public constructor
@@ -64,13 +80,23 @@ public class FormFragment extends Fragment {
 
         View view = getView();
         dataObject = new DataObject();
+        mManager = (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
 
+        // Try to load data from file
+        // If no data loaded, initialize new ArrayList
+        loadData();
+        if (locations == null){
+            locations = new ArrayList<DataObject>();
+        }
+
+        // Get EditText and Buttons
         mNameText = (EditText) view.findViewById(R.id.nameText);
         mNoteText = (EditText) view.findViewById(R.id.noteText);
         captureButton = (Button) view.findViewById(R.id.captureButton);
         saveButton = (Button) view.findViewById(R.id.saveButton);
         mImageView = (ImageView)view.findViewById(R.id.captureThumb);
 
+        // Set listeners for buttons
         captureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -94,9 +120,33 @@ public class FormFragment extends Fragment {
                 // Test to see if all field are completed and image is captured
                 if (nameText.length() != 0 && noteText.length() != 0 && mImageView.getDrawable() != null &&
                         !nameText.matches(testName) && !noteText.matches(testNote)){
-                    Toast.makeText(getActivity().getApplicationContext(), "Will Save.", Toast.LENGTH_SHORT).show();
 
-                } else {
+                    // Set data to custom object
+                    // Add object to ArrayList<DataObject> locations
+                    dataObject.setName(nameText);
+                    dataObject.setName(noteText);
+                    dataObject.setUri(mImageUri.toString());
+                    //dataObject.setImage(mImageView.getDrawable());
+                    dataObject.setLatitude(mLatitude);
+                    dataObject.setLongitude(mLongitude);
+                    locations.add(dataObject);
+
+                    // Save data to file
+                    try{
+                        FileOutputStream fos = getActivity().openFileOutput("data.txt", getActivity().MODE_PRIVATE);
+                        ObjectOutputStream oos = new ObjectOutputStream(fos);
+                        oos.writeInt(locations.size());
+                        for (DataObject e:locations){
+                            oos.writeObject(e);
+                        }
+                        oos.close();
+                        Toast.makeText(getActivity().getApplicationContext(), "Saving Data.", Toast.LENGTH_SHORT).show();
+                    } catch (IOException e){
+                        e.printStackTrace();
+                    }
+
+                    finish();
+                } /*else {
 
                     // Set error messages and show alert to user
                     if (mNameText.getText().length() == 0){
@@ -115,16 +165,19 @@ public class FormFragment extends Fragment {
                             .setPositiveButton("Ok", null)
                             .setIcon(android.R.drawable.ic_dialog_alert)
                             .show();
-                } // End of else statement
+                } // End of else statement */
             } // End of onClick
         }); // End of saveButton.onClickListener
 
+        /*
         mNameText.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if(MotionEvent.ACTION_UP == motionEvent.getAction()){
                     mNameText.setText("");
                     mNameText.setTextColor(Color.BLACK);
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
                 }
                 return true;
             } // End onTouch
@@ -136,11 +189,13 @@ public class FormFragment extends Fragment {
                 if(MotionEvent.ACTION_UP == motionEvent.getAction()){
                     mNoteText.setText("");
                     mNoteText.setTextColor(Color.BLACK);
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
                 }
                 return true;
             } // End onTouch
         }); // End mNoteText.setOnTouchListener
-
+        */
     } // End onActivityCreated
 
     private Uri getOutputUri(){
@@ -171,6 +226,7 @@ public class FormFragment extends Fragment {
                 mImageView.setImageBitmap((Bitmap)data.getParcelableExtra("data"));
             }
         }
+        enableGps();
     } // End onActivityResult
 
     private void addImageToGallery(Uri imageUri){
@@ -178,4 +234,74 @@ public class FormFragment extends Fragment {
         scanIntent.setData(imageUri);
         getActivity().sendBroadcast(scanIntent);
     } // End addImageToGallery
+
+    // Load data from file
+    public void loadData(){
+        try{
+            FileInputStream fin = getActivity().openFileInput("data.txt");
+            ObjectInputStream oin = new ObjectInputStream(fin);
+            int count = oin.readInt();
+            locations = new ArrayList<DataObject>();
+            for (int i = 0; i < count; i++)
+                locations.add((DataObject) oin.readObject());
+            oin.close();
+        } catch (IOException e){
+            e.printStackTrace();
+        } catch (ClassNotFoundException e){
+            e.printStackTrace();
+        }
+    } // end of loadData method
+
+    // Custom method to finish FormFragment and return intent
+    private void finish() {
+        Intent data = new Intent();
+        data.putExtra("returnKey", locations);
+        getActivity().setResult(Activity.RESULT_OK, data);
+        super.getActivity().finish();
+    } // end of finish method
+
+    // Enable phone GPS and get location
+    private void enableGps(){
+        if(mManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+            mManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,5000,10,this);
+
+            Location loc = mManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if (loc != null){
+                mLatitude = (loc.getLatitude());
+                mLongitude = (loc.getLongitude());
+            }
+        } else {
+            new AlertDialog.Builder(getActivity())
+                    .setTitle("GPS Unvailable")
+                    .setMessage("Enable GPS")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Intent settingsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivityForResult(settingsIntent, REQUEST_ENABLE_GPS);
+                        }
+                    })
+                    .show();
+        } // end else statement (if no GPS)
+    } // end of enableGps method
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+    }
+
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String s) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String s) {
+
+    }
 }
