@@ -1,5 +1,9 @@
-package com.fullsail.djones.android.mappingphotos;
+// David Jones
+// MDF3 Week 4
+// Mapping Photos
+// Full Sail University
 
+package com.fullsail.djones.android.mappingphotos;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
@@ -34,26 +38,25 @@ public class FormFragment extends Fragment {
     Button saveButton;
     EditText mNameText;
     EditText mNoteText;
-    Bitmap mBitmap;
     DataObject dataObject;
     Uri mImageUri;
     ImageView mImageView;
 
     public FormFragment() {
         // Required empty public constructor
-    }
+    } // End FormFragment()
 
     public static FormFragment newInstance(){
         FormFragment fragment = new FormFragment();
         return fragment;
-    }
+    } // End FormFragment newInstance()
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_form, container, false);
-    }
+    } // End onCreateView
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
@@ -77,8 +80,8 @@ public class FormFragment extends Fragment {
                     cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
                 }
                 startActivityForResult(cameraIntent, REQUEST_TAKE_PICTURE);
-            }
-        });
+            } // End onClick
+        }); // End captureButton.setOnClickListener
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,11 +91,14 @@ public class FormFragment extends Fragment {
                 String testName = getString(R.string.alert_name);
                 String testNote = getString(R.string.alert_note);
 
+                // Test to see if all field are completed and image is captured
                 if (nameText.length() != 0 && noteText.length() != 0 && mImageView.getDrawable() != null &&
                         !nameText.matches(testName) && !noteText.matches(testNote)){
                     Toast.makeText(getActivity().getApplicationContext(), "Will Save.", Toast.LENGTH_SHORT).show();
 
                 } else {
+
+                    // Set error messages and show alert to user
                     if (mNameText.getText().length() == 0){
                         mNameText.setText(R.string.alert_name);
                         mNameText.setTextColor(Color.RED);
@@ -102,17 +108,16 @@ public class FormFragment extends Fragment {
                         mNoteText.setText(R.string.alert_note);
                         mNoteText.setTextColor(Color.RED);
                     }
+                    // Create an alert to show
                     new AlertDialog.Builder(getActivity())
                             .setTitle("Error")
                             .setMessage("Name, notes, and image must be saved.  Please enter required fields.")
                             .setPositiveButton("Ok", null)
                             .setIcon(android.R.drawable.ic_dialog_alert)
                             .show();
-
-
-                }
-            }
-        });
+                } // End of else statement
+            } // End of onClick
+        }); // End of saveButton.onClickListener
 
         mNameText.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -122,8 +127,8 @@ public class FormFragment extends Fragment {
                     mNameText.setTextColor(Color.BLACK);
                 }
                 return true;
-            }
-        });
+            } // End onTouch
+        }); // End mNameText.setOnTouchListener
 
         mNoteText.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -133,10 +138,10 @@ public class FormFragment extends Fragment {
                     mNoteText.setTextColor(Color.BLACK);
                 }
                 return true;
-            }
-        });
+            } // End onTouch
+        }); // End mNoteText.setOnTouchListener
 
-    }
+    } // End onActivityCreated
 
     private Uri getOutputUri(){
         String imageName = new SimpleDateFormat("MMddyyy_HHmmss")
@@ -154,7 +159,7 @@ public class FormFragment extends Fragment {
             return null;
         }
         return Uri.fromFile(image);
-    }
+    } // End Uri getOutputUri
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -166,11 +171,11 @@ public class FormFragment extends Fragment {
                 mImageView.setImageBitmap((Bitmap)data.getParcelableExtra("data"));
             }
         }
-    }
+    } // End onActivityResult
 
     private void addImageToGallery(Uri imageUri){
         Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         scanIntent.setData(imageUri);
         getActivity().sendBroadcast(scanIntent);
-    }
+    } // End addImageToGallery
 }

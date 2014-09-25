@@ -1,3 +1,8 @@
+// David Jones
+// MDF3 Week 4
+// Mapping Photos
+// Full Sail University
+
 package com.fullsail.djones.android.mappingphotos;
 
 
