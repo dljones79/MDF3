@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,6 +58,8 @@ public class FormFragment extends Fragment implements LocationListener{
     LocationManager mManager;
     Double mLatitude;
     Double mLongitude;
+    Double passedLat = null;
+    Double passedLon = null;
 
     public FormFragment() {
         // Required empty public constructor
@@ -70,6 +73,14 @@ public class FormFragment extends Fragment implements LocationListener{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        try {
+            passedLat = (Double) getArguments().getDouble("lat");
+            passedLon = (Double) getArguments().getDouble("lon");
+            Log.i("Lat", passedLat.toString());
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_form, container, false);
     } // End onCreateView
@@ -126,8 +137,14 @@ public class FormFragment extends Fragment implements LocationListener{
                     dataObject.setName(nameText);
                     dataObject.setNote(noteText);
                     dataObject.setUri(mImageUri.toString());
-                    dataObject.setLatitude(mLatitude);
-                    dataObject.setLongitude(mLongitude);
+
+                    if (passedLat != null){
+                        dataObject.setLatitude(passedLat);
+                        dataObject.setLongitude(passedLon);
+                    } else {
+                        dataObject.setLatitude(mLatitude);
+                        dataObject.setLongitude(mLongitude);
+                    }
                     locations.add(dataObject);
 
                     // Save data to file

@@ -95,6 +95,19 @@ public class MyMapFragment extends MapFragment implements GoogleMap.OnMapClickLi
                 mMap.animateCamera(newCameraPosition(cameraPosition));
             }
         }
+
+        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+
+                Bundle bundle = new Bundle();
+                bundle.putDouble("lat", latLng.latitude);
+                bundle.putDouble("lon", latLng.longitude);
+                Intent intent = new Intent(getActivity(), FormActivity.class);
+                intent.putExtra("bundle", bundle);
+                startActivity(intent);
+            }
+        });
     }
 
     private void enableGps() {

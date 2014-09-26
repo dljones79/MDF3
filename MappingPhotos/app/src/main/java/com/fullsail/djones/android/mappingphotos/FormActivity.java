@@ -13,13 +13,33 @@ import android.view.MenuItem;
 
 public class FormActivity extends Activity {
 
+    public Double mLatitude = null;
+    public Double mLongitude = null;
+    public static final int REQUEST_CODE = 2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_form);
 
-        FormFragment formFragment = FormFragment.newInstance();
-        getFragmentManager().beginTransaction().replace(R.id.formContainer, formFragment).commit();
+        Bundle bundle = getIntent().getParcelableExtra("bundle");
+        if (bundle != null){
+            mLatitude = bundle.getDouble("lat");
+            mLongitude = bundle.getDouble("lon");
+        }
+
+        if (mLatitude != null){
+            Bundle args = new Bundle();
+            args.putDouble("lat", mLatitude);
+            args.putDouble("lon", mLongitude);
+
+            FormFragment formFragment = FormFragment.newInstance();
+            formFragment.setArguments(args);
+            getFragmentManager().beginTransaction().replace(R.id.formContainer, formFragment).commit();
+        } else {
+            FormFragment formFragment = FormFragment.newInstance();
+            getFragmentManager().beginTransaction().replace(R.id.formContainer, formFragment).commit();
+        }
 
     }
 

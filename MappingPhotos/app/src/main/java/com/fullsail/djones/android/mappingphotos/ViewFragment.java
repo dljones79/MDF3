@@ -1,3 +1,8 @@
+// David Jones
+// MDF3 Week 4
+// Mapping Photos
+// Full Sail University
+
 package com.fullsail.djones.android.mappingphotos;
 
 
@@ -38,6 +43,7 @@ public class ViewFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // Attempt to load passed bundle
         passedObject = new DataObject();
         passedObject = (DataObject) getArguments().getSerializable("data");
         // Inflate the layout for this fragment
@@ -48,6 +54,7 @@ public class ViewFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        // Check to see if we have passed data
         if (passedObject != null){
             Log.i("Passed Object", "Not Null");
         } else {
