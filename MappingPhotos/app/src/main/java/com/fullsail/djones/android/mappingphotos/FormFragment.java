@@ -124,9 +124,8 @@ public class FormFragment extends Fragment implements LocationListener{
                     // Set data to custom object
                     // Add object to ArrayList<DataObject> locations
                     dataObject.setName(nameText);
-                    dataObject.setName(noteText);
+                    dataObject.setNote(noteText);
                     dataObject.setUri(mImageUri.toString());
-                    //dataObject.setImage(mImageView.getDrawable());
                     dataObject.setLatitude(mLatitude);
                     dataObject.setLongitude(mLongitude);
                     locations.add(dataObject);

@@ -41,6 +41,11 @@ public class MainActivity extends Activity {
         });
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        MyMapFragment frag = new MyMapFragment();
+        getFragmentManager().beginTransaction().replace(R.id.container, frag).commit();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

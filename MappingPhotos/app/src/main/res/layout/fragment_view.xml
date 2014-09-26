@@ -2,31 +2,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.fullsail.djones.android.mappingphotos.FormFragment">
+    tools:context="com.fullsail.djones.android.mappingphotos.ViewFragment">
 
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Save"
-        android:id="@+id/saveButton"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="44dp" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Capture"
-        android:id="@+id/captureButton"
-        android:layout_above="@+id/saveButton"
-        android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Add Point of Interest"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Location Info"
         android:id="@+id/textView"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
@@ -35,56 +18,55 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Location Name:"
+        android:text="Location:"
         android:id="@+id/textView2"
         android:layout_below="@+id/textView"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="36dp" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/nameText"
-        android:hint="Enter Name"
-        android:layout_alignBottom="@+id/textView2"
-        android:layout_toRightOf="@+id/textView2"
-        android:layout_toEndOf="@+id/textView2"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:editable="true"
-        android:enabled="true"
-        android:focusableInTouchMode="true" />
+        android:layout_marginTop="48dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Location Note:"
-        android:id="@+id/noteLabel"
+        android:text="Medium Text"
+        android:id="@+id/nameText"
+        android:layout_toEndOf="@+id/textView2"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/textView2"
+        android:layout_alignBottom="@+id/textView2"
+        android:layout_alignLeft="@+id/textView"
+        android:layout_alignStart="@+id/textView" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Note:"
+        android:id="@+id/textView3"
         android:layout_below="@+id/textView2"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="30dp" />
+        android:layout_marginTop="32dp" />
 
-    <EditText
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Medium Text"
         android:id="@+id/noteText"
-        android:hint="Enter Note"
-        android:layout_toEndOf="@+id/textView2"
-        android:editable="true"
-        android:enabled="true"
-        android:focusableInTouchMode="true"
-        android:layout_alignBottom="@+id/noteLabel"
-        android:layout_toRightOf="@+id/textView2"
+        android:layout_alignBottom="@+id/textView3"
+        android:layout_alignLeft="@+id/nameText"
+        android:layout_alignStart="@+id/nameText"
         android:layout_alignRight="@+id/nameText"
         android:layout_alignEnd="@+id/nameText" />
 
     <ImageView
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:id="@+id/captureThumb"
-        android:layout_centerVertical="true"
+        android:id="@+id/locationImage"
+        android:layout_marginTop="86dp"
+        android:layout_below="@+id/noteText"
         android:layout_centerHorizontal="true" />
 </RelativeLayout>

@@ -6,17 +6,37 @@
 package com.fullsail.djones.android.mappingphotos;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 
 public class ViewActivity extends Activity {
 
+    public DataObject dataObject;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view);
+
+        dataObject = new DataObject();
+
+        Intent intent = getIntent();
+        if (intent != null){
+            dataObject = (DataObject)intent.getSerializableExtra("location");
+        }
+
+        Log.i("Data Object", dataObject.toString());
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("data", dataObject);
+
+        ViewFragment frag = ViewFragment.newInstance();
+        frag.setArguments(bundle);
+        getFragmentManager().beginTransaction().replace(R.id.viewContainer, frag).commit();
     }
 
 
